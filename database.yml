@@ -1,0 +1,2 @@
+dev: ${ssm:/aws/reference/secretsmanager/RDS/dev~true}
+production: ${ssm:/aws/reference/secretsmanager/RDS/production~true}

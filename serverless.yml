@@ -1,0 +1,21 @@
+service: pw-photo-manifest
+
+plugins:
+ - serverless-plugin-existing-s3
+ - serverless-offline
+
+custom: ${file(./custom.yml)}
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 3008
+  timeout: 600
+  stage: ${opt:stage, "dev"}
+  region: us-east-1
+  iamRoleStatements: ${file(./iamRoleStatements.yml)}
+  environment: ${file(./environment.yml)}
+  vpc: ${file(./vpc_settings.yml):${self:provider.stage}}
+
+functions:
+  - ${file(./default.functions.yml)}

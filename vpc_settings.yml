@@ -1,0 +1,8 @@
+dev:
+  vpc_mode_is_disabled: "This is a dummy value so we can have VPC mode running in prod, but not in any other env"
+production:
+  securityGroupIds:
+    - sg-087c887bede3a47fa
+  subnetIds:
+    - subnet-09c27320051232e0d
+    - subnet-0f8858e700ebb0253

@@ -1,0 +1,12 @@
+- Effect: "Allow"
+  Action:
+    - "s3:*"
+  Resource: "arn:aws:s3:::*"
+- Effect: "Allow"
+  Action:
+    - "sns:*"
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - "cognito-idp:AdminCreateUser"
+  Resource: "*"

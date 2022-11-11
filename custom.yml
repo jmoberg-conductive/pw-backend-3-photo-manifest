@@ -1,0 +1,4 @@
+database: ${file(./database.yml):${self:provider.stage}}
+cognito:
+  dev: arn:aws:cognito-idp:us-east-1:080911444257:userpool/us-east-1_UBALYHH3A
+  production: arn:aws:cognito-idp:us-east-1:344353464342:userpool/us-east-1_ss0lpYTOF

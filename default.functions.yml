@@ -1,0 +1,12 @@
+createPhotoManifest:
+  handler: src/handler.createPhotoManifest
+  events:
+    - http:
+        path: api/createPhotoManifest
+        method: get
+createNISCPhotoManifest:
+  handler: src/handler.createNISCPhotoManifest
+  events:
+    - http:
+        path: api/createNISCPhotoManifest
+        method: get

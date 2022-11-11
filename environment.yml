@@ -1,0 +1,19 @@
+NODE_ENV: ${self:provider.stage}
+
+DATABASE_URL: ${self:custom.database.host}
+DATABASE_URL_RO: ${self:custom.database.hostReadOnly}
+DATABASE_USER: ${self:custom.database.username}
+DATABASE_PASSWORD: ${self:custom.database.password}
+DATABASE_NAME: ${self:custom.database.dbname}
+
+APP_STAGE: ${self:provider.stage}
+REGION: ${self:provider.region}
+
+SNS_DEV: arn:aws:sns:us-east-1:080911444257:Import-Update-Topic
+SNS_PRODUCTION: arn:aws:sns:us-east-1:344353464342:Import-Update-Topic
+
+COGNITO_USER_POOL_DEV: us-east-1_UBALYHH3A
+COGNITO_USER_POOL_PRODUCTION: us-east-1_ss0lpYTOF
+
+COMMON_BUCKET_DEV: pw-app-common-dev
+COMMON_BUCKET_PRODUCTION: pw-app-common
