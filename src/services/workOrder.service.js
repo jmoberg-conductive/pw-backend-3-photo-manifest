@@ -361,7 +361,7 @@ const getClosedAndNotExportedWorkOrdersCount = async (KNEX, projectId) => {
 
 const getAllClosedAndNotExportedWorkOrdersPhotos = async (KNEX, projectId) => {
   try {
-    const data = await KNEX.raw(`SELECT distinct locationId, photoType, newMeterNumber, newMeterAssetNumber, oldMeterNumber, accountNumber, customerName, Photo.name, WorkOrder.id, WorkOrder.workOrderReasonCodes FROM (SELECT * FROM peakworkflowdb.WorkOrder WHERE projectId = '${projectId}' AND workOrderPhotosExported = false AND workOrderStatus = 'Closed' AND workOrderIsDeleted = false order by workOrderLastVisitDate limit 1000) as WorkOrder LEFT JOIN peakworkflowdb.Photo on Photo.workOrderId = WorkOrder.id LEFT JOIN peakworkflowdb.WorkOrderMeterDeploy on WorkOrderMeterDeploy.workOrderId = WorkOrder.id;`);
+    const data = await KNEX.raw(`SELECT distinct locationId, recordLocator, photoType, newMeterNumber, newMeterAssetNumber, oldMeterNumber, accountNumber, customerName, Photo.name, WorkOrder.id, WorkOrder.workOrderReasonCodes FROM (SELECT * FROM peakworkflowdb.WorkOrder WHERE projectId = '${projectId}' AND workOrderPhotosExported = false AND workOrderStatus = 'Closed' AND workOrderIsDeleted = false order by workOrderLastVisitDate limit 1000) as WorkOrder LEFT JOIN peakworkflowdb.Photo on Photo.workOrderId = WorkOrder.id LEFT JOIN peakworkflowdb.WorkOrderMeterDeploy on WorkOrderMeterDeploy.workOrderId = WorkOrder.id;`);
     return data[0];
   } catch (error) {
     throw error;

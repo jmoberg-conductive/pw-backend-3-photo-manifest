@@ -5,7 +5,7 @@
       "name": "pw-photo-manifest"
     },
     "provider": {
-      "stage": "dev",
+      "stage": "production",
       "variableSyntax": "\\${([^{}]+?)}",
       "name": "aws",
       "runtime": "nodejs12.x",
@@ -36,13 +36,13 @@
         }
       ],
       "environment": {
-        "NODE_ENV": "dev",
-        "DATABASE_URL": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
-        "DATABASE_URL_RO": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+        "NODE_ENV": "production",
+        "DATABASE_URL": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
+        "DATABASE_URL_RO": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com",
         "DATABASE_USER": "pwlambdauser",
         "DATABASE_PASSWORD": "D-j2N#Gb4be",
         "DATABASE_NAME": "peakworkflowdb",
-        "APP_STAGE": "dev",
+        "APP_STAGE": "production",
         "REGION": "us-east-1",
         "SNS_DEV": "arn:aws:sns:us-east-1:080911444257:Import-Update-Topic",
         "SNS_PRODUCTION": "arn:aws:sns:us-east-1:344353464342:Import-Update-Topic",
@@ -52,7 +52,13 @@
         "COMMON_BUCKET_PRODUCTION": "pw-app-common"
       },
       "vpc": {
-        "vpc_mode_is_disabled": "This is a dummy value so we can have VPC mode running in prod, but not in any other env"
+        "securityGroupIds": [
+          "sg-087c887bede3a47fa"
+        ],
+        "subnetIds": [
+          "subnet-09c27320051232e0d",
+          "subnet-0f8858e700ebb0253"
+        ]
       },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
@@ -116,13 +122,13 @@
           "CreatePhotoManifestLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/pw-photo-manifest-dev-createPhotoManifest"
+              "LogGroupName": "/aws/lambda/pw-photo-manifest-production-createPhotoManifest"
             }
           },
           "CreateNISCPhotoManifestLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/pw-photo-manifest-dev-createNISCPhotoManifest"
+              "LogGroupName": "/aws/lambda/pw-photo-manifest-production-createNISCPhotoManifest"
             }
           },
           "IamRoleLambdaExecution": {
@@ -151,7 +157,7 @@
                       "-",
                       [
                         "pw-photo-manifest",
-                        "dev",
+                        "production",
                         "lambda"
                       ]
                     ]
@@ -167,7 +173,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/pw-photo-manifest-dev*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/pw-photo-manifest-production*:*"
                           }
                         ]
                       },
@@ -178,7 +184,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/pw-photo-manifest-dev*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/pw-photo-manifest-production*:*:*"
                           }
                         ]
                       },
@@ -201,7 +207,7 @@
                   "-",
                   [
                     "pw-photo-manifest",
-                    "dev",
+                    "production",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -232,9 +238,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/pw-photo-manifest/dev/1668136956474-2022-11-11T03:22:36.474Z/pw-photo-manifest.zip"
+                "S3Key": "serverless/pw-photo-manifest/production/1668141249703-2022-11-11T04:34:09.703Z/pw-photo-manifest.zip"
               },
-              "FunctionName": "pw-photo-manifest-dev-createPhotoManifest",
+              "FunctionName": "pw-photo-manifest-production-createPhotoManifest",
               "Handler": "src/handler.createPhotoManifest",
               "MemorySize": 3008,
               "Role": {
@@ -247,13 +253,13 @@
               "Timeout": 600,
               "Environment": {
                 "Variables": {
-                  "NODE_ENV": "dev",
-                  "DATABASE_URL": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
-                  "DATABASE_URL_RO": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+                  "NODE_ENV": "production",
+                  "DATABASE_URL": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
+                  "DATABASE_URL_RO": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com",
                   "DATABASE_USER": "pwlambdauser",
                   "DATABASE_PASSWORD": "D-j2N#Gb4be",
                   "DATABASE_NAME": "peakworkflowdb",
-                  "APP_STAGE": "dev",
+                  "APP_STAGE": "production",
                   "REGION": "us-east-1",
                   "SNS_DEV": "arn:aws:sns:us-east-1:080911444257:Import-Update-Topic",
                   "SNS_PRODUCTION": "arn:aws:sns:us-east-1:344353464342:Import-Update-Topic",
@@ -262,20 +268,28 @@
                   "COMMON_BUCKET_DEV": "pw-app-common-dev",
                   "COMMON_BUCKET_PRODUCTION": "pw-app-common"
                 }
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
               }
             },
             "DependsOn": [
               "CreatePhotoManifestLogGroup"
             ]
           },
-          "CreatePhotoManifestLambdaVersionByxl8SnQx9OUgau1UMQl88mFDULVF3mUxUa5No6WU": {
+          "CreatePhotoManifestLambdaVersiondNDVas9vZgiWAnGM1Qsryvgg5YXhHY3RqBQaXSp7eNU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreatePhotoManifestLambdaFunction"
               },
-              "CodeSha256": "87EMoTjiNCET3y8fRL8KOYnVFYhO7YvdVUWtpZeXUTM="
+              "CodeSha256": "aIMCs+J0xyxtWINV/L9inE4BvMLef0uhv/epr71FBe4="
             }
           },
           "CreateNISCPhotoManifestLambdaFunction": {
@@ -285,9 +299,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/pw-photo-manifest/dev/1668136956474-2022-11-11T03:22:36.474Z/pw-photo-manifest.zip"
+                "S3Key": "serverless/pw-photo-manifest/production/1668141249703-2022-11-11T04:34:09.703Z/pw-photo-manifest.zip"
               },
-              "FunctionName": "pw-photo-manifest-dev-createNISCPhotoManifest",
+              "FunctionName": "pw-photo-manifest-production-createNISCPhotoManifest",
               "Handler": "src/handler.createNISCPhotoManifest",
               "MemorySize": 3008,
               "Role": {
@@ -300,13 +314,13 @@
               "Timeout": 600,
               "Environment": {
                 "Variables": {
-                  "NODE_ENV": "dev",
-                  "DATABASE_URL": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
-                  "DATABASE_URL_RO": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+                  "NODE_ENV": "production",
+                  "DATABASE_URL": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
+                  "DATABASE_URL_RO": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com",
                   "DATABASE_USER": "pwlambdauser",
                   "DATABASE_PASSWORD": "D-j2N#Gb4be",
                   "DATABASE_NAME": "peakworkflowdb",
-                  "APP_STAGE": "dev",
+                  "APP_STAGE": "production",
                   "REGION": "us-east-1",
                   "SNS_DEV": "arn:aws:sns:us-east-1:080911444257:Import-Update-Topic",
                   "SNS_PRODUCTION": "arn:aws:sns:us-east-1:344353464342:Import-Update-Topic",
@@ -315,26 +329,34 @@
                   "COMMON_BUCKET_DEV": "pw-app-common-dev",
                   "COMMON_BUCKET_PRODUCTION": "pw-app-common"
                 }
+              },
+              "VpcConfig": {
+                "SecurityGroupIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"securityGroupIds\"]"
+                },
+                "SubnetIds": {
+                  "$ref": "$[\"service\"][\"provider\"][\"vpc\"][\"subnetIds\"]"
+                }
               }
             },
             "DependsOn": [
               "CreateNISCPhotoManifestLogGroup"
             ]
           },
-          "CreateNISCPhotoManifestLambdaVersion0OO0BXL2v2her5SZFyTOrlcVRz4MbJsRo3slstsGo": {
+          "CreateNISCPhotoManifestLambdaVersion7lCOg9pngyDxcGBmpbjEF6JQmwBDwPAZwz4PS4ck": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateNISCPhotoManifestLambdaFunction"
               },
-              "CodeSha256": "87EMoTjiNCET3y8fRL8KOYnVFYhO7YvdVUWtpZeXUTM="
+              "CodeSha256": "aIMCs+J0xyxtWINV/L9inE4BvMLef0uhv/epr71FBe4="
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "dev-pw-photo-manifest",
+              "Name": "production-pw-photo-manifest",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -468,13 +490,13 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1668136943351": {
+          "ApiGatewayDeployment1668141235672": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               },
-              "StageName": "dev"
+              "StageName": "production"
             },
             "DependsOn": [
               "ApiGatewayMethodApiCreatephotomanifestGet",
@@ -565,13 +587,13 @@
           "CreatePhotoManifestLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreatePhotoManifestLambdaVersionByxl8SnQx9OUgau1UMQl88mFDULVF3mUxUa5No6WU"
+              "Ref": "CreatePhotoManifestLambdaVersiondNDVas9vZgiWAnGM1Qsryvgg5YXhHY3RqBQaXSp7eNU"
             }
           },
           "CreateNISCPhotoManifestLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateNISCPhotoManifestLambdaVersion0OO0BXL2v2her5SZFyTOrlcVRz4MbJsRo3slstsGo"
+              "Ref": "CreateNISCPhotoManifestLambdaVersion7lCOg9pngyDxcGBmpbjEF6JQmwBDwPAZwz4PS4ck"
             }
           },
           "ServiceEndpoint": {
@@ -592,7 +614,7 @@
                   {
                     "Ref": "AWS::URLSuffix"
                   },
-                  "/dev"
+                  "/production"
                 ]
               ]
             }
@@ -672,11 +694,11 @@
         "username": "pwlambdauser",
         "password": "D-j2N#Gb4be",
         "engine": "mysql",
-        "host": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+        "host": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
         "port": 3306,
         "dbname": "peakworkflowdb",
-        "dbClusterIdentifier": "pw-db-development-cluster",
-        "hostReadOnly": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com"
+        "dbClusterIdentifier": "peakworkflow-3-cluster",
+        "hostReadOnly": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com"
       },
       "cognito": {
         "dev": "arn:aws:cognito-idp:us-east-1:080911444257:userpool/us-east-1_UBALYHH3A",
@@ -700,13 +722,13 @@
             }
           }
         ],
-        "name": "pw-photo-manifest-dev-createPhotoManifest",
+        "name": "pw-photo-manifest-production-createPhotoManifest",
         "package": {},
         "memory": 3008,
         "timeout": 600,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "CreatePhotoManifestLambdaVersionByxl8SnQx9OUgau1UMQl88mFDULVF3mUxUa5No6WU"
+        "versionLogicalId": "CreatePhotoManifestLambdaVersiondNDVas9vZgiWAnGM1Qsryvgg5YXhHY3RqBQaXSp7eNU"
       },
       "createNISCPhotoManifest": {
         "handler": "src/handler.createNISCPhotoManifest",
@@ -719,13 +741,13 @@
             }
           }
         ],
-        "name": "pw-photo-manifest-dev-createNISCPhotoManifest",
+        "name": "pw-photo-manifest-production-createNISCPhotoManifest",
         "package": {},
         "memory": 3008,
         "timeout": 600,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "CreateNISCPhotoManifestLambdaVersion0OO0BXL2v2her5SZFyTOrlcVRz4MbJsRo3slstsGo"
+        "versionLogicalId": "CreateNISCPhotoManifestLambdaVersion7lCOg9pngyDxcGBmpbjEF6JQmwBDwPAZwz4PS4ck"
       }
     },
     "configValidationMode": "warn",
@@ -741,11 +763,11 @@
           "username": "pwlambdauser",
           "password": "D-j2N#Gb4be",
           "engine": "mysql",
-          "host": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+          "host": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
           "port": 3306,
           "dbname": "peakworkflowdb",
-          "dbClusterIdentifier": "pw-db-development-cluster",
-          "hostReadOnly": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com"
+          "dbClusterIdentifier": "peakworkflow-3-cluster",
+          "hostReadOnly": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com"
         },
         "cognito": {
           "dev": "arn:aws:cognito-idp:us-east-1:080911444257:userpool/us-east-1_UBALYHH3A",
@@ -757,7 +779,7 @@
         "runtime": "nodejs12.x",
         "memorySize": 3008,
         "timeout": 600,
-        "stage": "dev",
+        "stage": "production",
         "region": "us-east-1",
         "iamRoleStatements": [
           {
@@ -783,13 +805,13 @@
           }
         ],
         "environment": {
-          "NODE_ENV": "dev",
-          "DATABASE_URL": "pw-db-development-cluster.cluster-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
-          "DATABASE_URL_RO": "pw-db-development-cluster.cluster-ro-cbfhhfluqtn0.us-east-1.rds.amazonaws.com",
+          "NODE_ENV": "production",
+          "DATABASE_URL": "peakworkflow-3-cluster.cluster-crhdocw3tzon.us-east-1.rds.amazonaws.com",
+          "DATABASE_URL_RO": "peakworkflow-3-cluster.cluster-ro-crhdocw3tzon.us-east-1.rds.amazonaws.com",
           "DATABASE_USER": "pwlambdauser",
           "DATABASE_PASSWORD": "D-j2N#Gb4be",
           "DATABASE_NAME": "peakworkflowdb",
-          "APP_STAGE": "dev",
+          "APP_STAGE": "production",
           "REGION": "us-east-1",
           "SNS_DEV": "arn:aws:sns:us-east-1:080911444257:Import-Update-Topic",
           "SNS_PRODUCTION": "arn:aws:sns:us-east-1:344353464342:Import-Update-Topic",
@@ -799,7 +821,13 @@
           "COMMON_BUCKET_PRODUCTION": "pw-app-common"
         },
         "vpc": {
-          "vpc_mode_is_disabled": "This is a dummy value so we can have VPC mode running in prod, but not in any other env"
+          "securityGroupIds": [
+            "sg-087c887bede3a47fa"
+          ],
+          "subnetIds": [
+            "subnet-09c27320051232e0d",
+            "subnet-0f8858e700ebb0253"
+          ]
         }
       },
       "functions": [
@@ -833,7 +861,7 @@
     "artifact": "/Users/johnmoberg/Documents/GitHub/pw-backend-3-photo-manifest/.serverless/pw-photo-manifest.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/pw-photo-manifest/dev/1668136956474-2022-11-11T03:22:36.474Z",
+    "artifactDirectoryName": "serverless/pw-photo-manifest/production/1668141249703-2022-11-11T04:34:09.703Z",
     "artifact": "pw-photo-manifest.zip"
   }
 }

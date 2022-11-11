@@ -58,8 +58,8 @@ const NISC_PHOTO_MANIFEST_BUILDER = require('./photo-manifest-builder/indexV2');
 const moment = require('moment-timezone');
 const { listWorkOrdersByWorkOrderType } = require('./services/workOrder.service');
 
-let PROJECT_DATA_MAPPER = require('./project-data-maps');
-PROJECT_DATA_MAPPER = PROJECT_DATA_MAPPER[process.env.APP_STAGE];
+// let PROJECT_DATA_MAPPER = require('./project-data-maps');
+// PROJECT_DATA_MAPPER = PROJECT_DATA_MAPPER[process.env.APP_STAGE];
 
 const COMMON_BUCKET = process.env.APP_STAGE === 'production' ? process.env.COMMON_BUCKET_PRODUCTION : process.env.COMMON_BUCKET_DEV;
 
@@ -1406,6 +1406,7 @@ const createNISCPhotoManifest = async (event) => {
     const recordDelimiter = event.recordDelimiter;
     console.log(`********* CHECKING IF PHOTO MANIFEST IS NEEDED FOR PROJECT: ${projectId} *********'`);
     const projectBucketName = await getProjectBucketNameByProjectId(KNEX, projectId);
+    console.log(`projectBucketName: ${projectBucketName}`);
     const count = await getClosedAndNotExportedWorkOrdersCount(KNEX, projectId);
     console.log(`Closed/Not-Exported work orders count: ${count}`);
     if (count >= workOrderCount) {
